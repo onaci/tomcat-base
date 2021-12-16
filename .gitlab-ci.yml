@@ -1,0 +1,4 @@
+
+include:
+  project: 'onaci/gitlab-templates'
+  file: 'docker-build.yml'

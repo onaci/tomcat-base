@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration monitorInterval="30">
+  <properties>
+    <property name="identifier">%d{yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSZ} [%t.%X{ID}]</property>
+    <property name="suppress">org.junit,org.apache.catalina,org.apache.coyote,org.apache.maven,org.apache.tomcat,org.springframework,sun.reflect,java.lang.reflect</property>
+    <property name="message">%-5level %logger{36} %replace{%m%xEx{filters(${suppress})}}{[\r\n]+}{}%n</property>
+  </properties>
+  <appenders>
+    <!-- For best use in docker: *everything* should go to stdout! -->
+    <!-- The alwaysWriteExceptions="false" is needed because we have exception messages as part of the
+         individual log messages (formatted to strip out newlines to work with fluentD), and so *don't* need a
+         second copy of the stacktrace appended again -->
+    <Console name="default" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} ${message}" alwaysWriteExceptions="false" />
+    </Console>
+  </appenders>
+  <loggers>
+    <!-- root/default logger -->
+    <root level="info" additivity="false">
+      <appender-ref ref="default"/>
+    </root>
+  </loggers>
+</configuration>

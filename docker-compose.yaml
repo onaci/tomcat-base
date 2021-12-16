@@ -1,0 +1,20 @@
+---
+#-------------------------------------------------------------------------------
+# Docker Development Environment Composition for the Tomcat base image
+#-------------------------------------------------------------------------------
+version: "3.8"
+
+services:
+  tomcat:
+    build:
+      context: .
+    container_name: tomcat
+    environment:
+      TOMCAT_USER_ID: 1000
+      TOMCAT_GROUP_ID: 1000
+    image: edas/tomcat-base:dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./setenv.sh:/usr/local/tomcat/bin/setenv.sh
+      - ./webapps/:/usr/local/tomcat/webapps/
