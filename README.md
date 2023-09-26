@@ -1,4 +1,4 @@
-# onaci/tomcat-data-servers
+# onaci/tomcat-base
 
 The files in this repository define a set of docker images which are derived from a variety of base images involving
 Apache Tomcat, with some common, additional hardening to make the images suitable for use in production.
