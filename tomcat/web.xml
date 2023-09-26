@@ -462,27 +462,27 @@
     <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
     <init-param>
       <param-name>cors.allowed.origins</param-name>
-      <param-value>${cors.allowed.origins}</param-value>
+      <param-value>${CORS_ALLOWED_ORIGINS}</param-value>
     </init-param>
     <init-param>
       <param-name>cors.allowed.methods</param-name>
-      <param-value>${cors.allowed.methods}</param-value>
+      <param-value>${CORS_ALLOWED_METHODS}</param-value>
     </init-param>
     <init-param>
       <param-name>cors.allowed.headers</param-name>
-      <param-value>${cors.allowed.headers}</param-value>
+      <param-value>${CORS_ALLOWED_HEADERS}</param-value>
     </init-param>
     <init-param>
       <param-name>cors.exposed.headers</param-name>
-      <param-value>${cors.exposed.headers}</param-value>
+      <param-value>${CORS_EXPOSED_HEADERS}</param-value>
     </init-param>
     <init-param>
       <param-name>cors.support.credentials</param-name>
-      <param-value>${cors.support.credentials}</param-value>
+      <param-value>${CORS_SUPPORT_CREDENTIALS}</param-value>
     </init-param>
     <init-param>
       <param-name>cors.preflight.maxage</param-name>
-      <param-value>${cors.preflight.maxage}</param-value>
+      <param-value>${CORS_PREFLIGHT_MAXAGE}</param-value>
     </init-param>
   </filter>
   <filter-mapping>

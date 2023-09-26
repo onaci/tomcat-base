@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration monitorInterval="30">
+  <properties>
+    <property name="identifier">%d{yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSZ} [%t.%X{ID}]</property>
+    <property name="suppress">org.junit,org.apache.catalina,org.apache.coyote,org.apache.maven,org.apache.tomcat,org.springframework,sun.reflect,java.lang.reflect</property>
+    <property name="message">%-5level %logger{36} %replace{%m%xEx{filters(${suppress})}}{[\r\n]+}{}%n</property>
+  </properties>
+  <appenders>
+    <!-- For best use in docker: *everything* should go to stdout! -->
+    <!-- Configure multiple targets so that we can have different patterns, allowing log messages to be easily filtered -->
+    <!-- The alwaysWriteExceptions="false" is needed because we have exception messages as part of the
+         individual log messages (formatted to strip out newlines to work with fluentD), and so *don't* need a
+         second copy of the stacktrace appended again -->
+    <Console name="default" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} ${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="serverStartup" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} START-${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="catalogInit" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} INIT-${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="httpOutput" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} [%t] HTTP-${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="featureCollectionScan" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} SCAN-${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="forecastModelRunCollection"  target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} FMRC-${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="threddsServlet" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} TDS-${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="cache" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} CACHE-${message}" alwaysWriteExceptions="false" />
+    </Console>
+
+    <Console name="ncml" target="SYSTEM_OUT">
+      <PatternLayout pattern="${identifier} NCML-${message}" alwaysWriteExceptions="false" />
+    </Console>
+  </appenders>
+  <loggers>
+    <!-- serverStartup Loggers -->
+    <logger name="serverStartup" level="info" additivity="false">
+      <appender-ref ref="serverStartup"/>
+    </logger>
+
+    <logger name="org.springframework.beans.factory" level="info" additivity="false">
+      <appender-ref ref="serverStartup"/>
+    </logger>
+
+    <logger name="org.springframework.web" level="info" additivity="false">
+      <appender-ref ref="serverStartup"/>
+    </logger>
+
+    <logger name="org.springframework" level="info" additivity="false">
+      <appender-ref ref="serverStartup"/>
+    </logger>
+
+    <!-- catalogInit Loggers -->
+    <logger name="thredds.servlet.DataRootHandler.catalogInit" level="debug" additivity="false">
+      <appender-ref ref="catalogInit"/>
+    </logger>
+
+    <logger name="thredds.catalog.parser" level="info" additivity="false">
+      <appender-ref ref="catalogInit"/>
+    </logger>
+
+    <logger name="thredds.featurecollection.FeatureCollectionConfig" level="info" additivity="false">
+      <appender-ref ref="catalogInit"/>
+    </logger>
+
+    <logger name="ucar.nc2.thredds.MetadataExtractorAcdd" level="info" additivity="false">
+      <appender-ref ref="catalogInit"/>
+    </logger>
+
+    <logger name="thredds.catalog.InvDatasetFeatureCollection.catalogInit" level="info" additivity="false">
+      <appender-ref ref="catalogInit"/>
+    </logger>
+
+    <logger name="thredds.catalog.InvDatasetFeatureCollection.catalogInit" level="info" additivity="false">
+      <appender-ref ref="catalogInit"/>
+    </logger>
+
+    <logger name="thredds.server.config.TdsContext.catalogInit" level="info" additivity="false">
+      <appender-ref ref="catalogInit"/>
+    </logger>
+
+    <!-- cache Loggers -->
+    <logger name="cacheLogger" level="info" additivity="false">
+      <appender-ref ref="cache"/>
+    </logger>
+
+    <logger name="thredds.filesystem.CacheManager" level="info" additivity="false">
+      <appender-ref ref="cache"/>
+    </logger>
+
+    <!-- NCML Loggers -->
+    <logger name="ucar.nc2.ncml" level="info" additivity="false">
+      <appender-ref ref="ncml"/>
+    </logger>
+
+    <!-- forecastModelRunCollection Loggers -->
+    <logger name="ucar.nc2.ft.fmrc" level="info" additivity="false">
+      <appender-ref ref="forecastModelRunCollection"/>
+    </logger>
+
+    <logger name="thredds.catalog.InvDatasetFcFmrc" level="info" additivity="false">
+      <appender-ref ref="forecastModelRunCollection"/>
+    </logger>
+
+    <logger name="thredds.servlet.DataRootHandler.fcScan" level="info" additivity="false">
+      <appender-ref ref="forecastModelRunCollection"/>
+    </logger>
+
+    <logger name="thredds.inventory.CollectionManagerAbstract" level="info" additivity="false">
+      <appender-ref ref="forecastModelRunCollection"/>
+    </logger>
+
+    <logger name="thredds.inventory.bdb.MetadataManager" level="warn" additivity="false">
+      <appender-ref ref="forecastModelRunCollection"/>
+    </logger>
+
+    <!-- featureCollectionScan Loggers -->
+    <logger name="featureCollectionScan" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="thredds.inventory.MFileCollectionManager" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="thredds.inventory.CollectionUpdater" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="thredds.server.admin.CollectionController" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="ucar.nc2.grib" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="ucar.nc2.grib.grib1.builder.Grib1CollectionBuilder" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="ucar.nc2.grib.grib2.builder.Grib2CollectionBuilder" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="thredds.catalog.InvDatasetFeatureCollection" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="thredds.catalog.InvDatasetFcGrib" level="info" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <logger name="org.quartz" level="warn" additivity="false">
+      <appender-ref ref="featureCollectionScan"/>
+    </logger>
+
+    <!-- httpOutput Loggers -->
+    <logger name="thredds.catalog.XMLEntityResolver" level="info" additivity="false">
+       <appender-ref ref="httpOutput"/>
+    </logger>
+
+    <logger name="org.apache.http.impl.conn" level="info" additivity="false">
+       <appender-ref ref="httpOutput"/>
+    </logger>
+
+    <!-- threddsServlet Loggers -->
+    <!-- WMS stuff has routine higher level of messages, so anything below 'WARN' is filtered by default -->
+    <logger name="uk.ac.rdg.resc.ncwms" level="warn" additivity="false">
+      <appender-ref ref="threddsServlet"/>
+    </logger>
+
+    <logger name="thredds.server.wms.responses" level="warn" additivity="false">
+      <appender-ref ref="threddsServlet"/>
+    </logger>
+
+    <logger name="thredds.server.metadata" level="warn" additivity="false">
+      <appender-ref ref="threddsServlet"/>
+    </logger>
+
+    <logger name="thredds.server" level="info" additivity="false">
+      <appender-ref ref="threddsServlet"/>
+    </logger>
+
+    <logger name="threddsServlet" level="info" additivity="false">
+      <appender-ref ref="threddsServlet"/>
+    </logger>
+
+    <logger name="org.springframework.http" level="info" additivity="false">
+      <appender-ref ref="threddsServlet"/>
+    </logger>
+
+    <!-- root/default logger for everything else -->
+    <root level="info" additivity="false">
+      <appender-ref ref="default"/>
+    </root>
+  </loggers>
+</configuration>

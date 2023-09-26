@@ -1,20 +1,47 @@
 ---
 #-------------------------------------------------------------------------------
-# Docker Development Environment Composition for the Tomcat base image
+# Docker Development Environment Composition for the Tomcat base images
 #-------------------------------------------------------------------------------
 version: "3.8"
 
 services:
-  tomcat:
+  tomcat-base:
     build:
-      context: .
-    container_name: tomcat
+      context: ./
+      args:
+        BASE_TAG: "${TOMCAT_BASE_TAG}"
+    container_name: tomcat-base
     environment:
-      TOMCAT_USER_ID: 1000
-      TOMCAT_GROUP_ID: 1000
-    image: edas/tomcat-base:dev
+      CONNECTOR_PROXY_PORT: "${TOMCAT_PROXY_PORT}"
+      CONNECTOR_PROXY_SCHEME: 'http'
+      CONNECTOR_PROXY_SECURE: 'false'
+    image: "onaci/tomcat-base:${TOMCAT_BASE_TAG}"
     ports:
-      - "8080:8080"
+      - "${TOMCAT_PROXY_PORT}:8080"
     volumes:
-      - ./setenv.sh:/usr/local/tomcat/bin/setenv.sh
       - ./webapps/:/usr/local/tomcat/webapps/
+
+  thredds-base:
+    build:
+      context: ./
+      dockerfile: Dockerfile.thredds
+      args:
+        BASE_TAG: "${THREDDS_BASE_TAG}"
+    container_name: thredds-base
+    environment:
+      ACCESS_LOGGING_ENABLED: 'false'
+      CONNECTOR_PROXY_PORT: "${THREDDS_PROXY_PORT}"
+      CONNECTOR_PROXY_SCHEME: 'http'
+      CONNECTOR_PROXY_SECURE: 'false'
+      THREDDS_XMX_SIZE: '1024M'
+      THREDDS_XMS_SIZE: '512M'
+    image: "onaci/thredds-base:${THREDDS_BASE_TAG}"
+    ports:
+      - "${THREDDS_PROXY_PORT}:8080"
+    volumes:
+      - thredds-base-cache:/usr/share/tomcat/content/cache
+      - thredds-base-prefs:/usr/share/tomcat/javaUtilPrefs
+
+volumes:
+  thredds-base-cache:
+  thredds-base-prefs:

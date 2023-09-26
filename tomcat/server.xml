@@ -65,7 +65,7 @@
          Java AJP  Connector: /docs/config/ajp.html
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
-	 
+
     	 The connector.* settings interpolated here can be configured via
       	 CONNECTOR_* docker environment variables, which will be made available
 	 to tomcat (and this file) via the CATALINA_OPTS exports in setenv.sh
@@ -74,40 +74,23 @@
       Unsecured HTTP Connector on port 8080
       Use this connector for local, unsecured connections OR for connections
       from a trusted, unsecured (non-SSL) reverse proxy webserver.
-      Can also be used by the docker health check.    
+      Can also be used by the docker health check.
     -->
-    <Connector compression="${connector.compression}"
-               compressionMinSize="${connector.compressionMinSize}"
-               compressableMimeType="${connector.compressibleMimeType}"
-    	       connectionTimeout="${connector.connectionTimeout}"
-	       maxThreads="${connector.maxThreads}"
-	       port="8080"
-	       protocol="HTTP/1.1"
-	       redirectPort="8443"
-               relaxedPathChars="[]|"
-	       relaxedQueryChars="[]:|{}^&#x5c;&#x60;&quot;&lt;&gt;"
-	       scheme="http"
-	       secure="false"
-	       server="${connector.server}" />
-    <!--
-      Customisable connector on port 8443
-      Use this connector when you need full control over the connector properties,
-      e.g. when tomcat is behind a reverse proxy server that handles SSL Termination.
-    -->
-    <Connector compression="${connector.compression}"
-               compressionMinSize="${connector.compressionMinSize}"
-               compressableMimeType="${connector.compressibleMimeType}"
-               connectionTimeout="${connector.connectionTimeout}"
-	       maxThreads="${connector.maxThreads}"
-               port="8443"
-               protocol="${connector.protocol}"
-               proxyName="${connector.proxyName}"
-               proxyPort="${connector.proxyPort}"
-	       relaxedPathChars="[]|"
-	       relaxedQueryChars="[]:|{}^&#x5c;&#x60;&quot;&lt;&gt;"
-               scheme="${connector.proxyScheme}"
-               secure="${connector.proxySecure}"
-	       server="${connector.server}" />
+    <Connector compression="${CONNECTOR_COMPRESSION}"
+          compressionMinSize="${CONNECTOR_COMPRESSION_MIN_SIZE}"
+          compressableMimeType="${CONNECTOR_COMPRESSIBLE_MIME_TYPE}"
+    	     connectionTimeout="${CONNECTOR_CONNECTION_TIMEOUT}"
+	     maxThreads="${CONNECTOR_MAX_THREADS}"
+	     port="8080"
+	     protocol="HTTP/1.1"
+          proxyName="${CONNECTOR_PROXY_NAME}"
+          proxyPort="${CONNECTOR_PROXY_PORT}"
+	     redirectPort="8443"
+          relaxedPathChars="${CONNECTOR_RELAXED_PATH_CHARS}"
+	     relaxedQueryChars="${CONNECTOR_RELAXED_QUERY_CHARS}"
+	     scheme="${CONNECTOR_PROXY_SCHEME}"
+	     secure="${CONNECTOR_PROXY_SECURE}"
+	     server="${CONNECTOR_SERVER}" />
 
     <!-- An Engine represents the entry point (within Catalina) that processes
          every request.  The Engine implementation for Tomcat stand alone
@@ -153,7 +136,7 @@
                protocolHeader="x-forwarded-proto"
                portHeader="x-forwarded-port"
                requestAttributesEnabled="true"
-               trustedProxies="${connector.trustedProxies}"/>
+               trustedProxies="${REMOTE_IP_TRUSTED_PROXIES}"/>
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
@@ -168,8 +151,8 @@
              and the timestamp forced from US-format to the sortable ISO standard format
         -->
         <Valve className="org.apache.catalina.valves.AccessLogValve"
-               directory="/tmp"
-               prefix="accesslogpipe"
+               directory="${ACCESS_LOG_DIR}"
+               prefix="${ACCESS_LOG_NAME}"
                suffix=""
                rotatable="false"
                requestAttributesEnabled="true"

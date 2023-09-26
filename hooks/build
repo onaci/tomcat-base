@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Allow our docker build to add Open Containers-style labels
+# See: https://github.com/opencontainers/image-spec/blob/main/annotations.md
+
+BUILD_TIMESTAMP="$(date --rfc-3339=seconds)"
+SAFE_TIMESTAMP="$(echo $BUILD_TIMESTAMP | sed 's/ /T/g' | sed 's/:/-/g' | sed 's/\+.*//')"
+SOURCE_URL="$(git remote get-url origin || true)"
+VERSION_TAG="${SOURCE_BRANCH}_v${SAFE_TIMESTAMP}-${SOURCE_COMMIT}"
+
+# Check if we've got known build arguments passed as environment variables
+# Make the BASE_TAG argument match the DOCKER_TAG provided
+BUILD_ARGS=""
+if [ -n "${BASE_IMAGE:-}" ]; then
+    BUILD_ARGS="--build-arg \"BASE_IMAGE=${BASE_IMAGE}\""
+elif [[ -n "${DOCKER_TAG:-}" ]] && [[ "${DOCKER_TAG:-}" != "latest" ]]; then
+    BUILD_ARGS="--build-arg \"BASE_TAG=${DOCKER_TAG}\""
+fi
+
+# Build our customised docker image
+docker build --pull ${BUILD_ARGS} \
+    --label "org.opencontainers.image.authors=${BUILD_AUTHORS:-CSIRO Coastal Informatics Team}" \
+    --label "org.opencontainers.image.branch=${SOURCE_BRANCH}" \
+    --label "org.opencontainers.image.created=${BUILD_TIMESTAMP}" \
+    --label "org.opencontainers.image.licenses=BSD-3-Clause" \
+    --label "org.opencontainers.image.revision=${SOURCE_COMMIT}" \
+    --label "org.opencontainers.image.source=${SOURCE_URL}" \
+    --label "org.opencontainers.image.title=${IMAGE_NAME}" \
+    --label "org.opencontainers.image.url=${DOCKER_REPO:-onaci/tomcat-base}" \
+    --label "org.opencontainers.image.vendor=CSIRO" \
+    --label "org.opencontainers.image.version=${VERSION_TAG}" \
+    -f ${DOCKERFILE_PATH} \
+    -t ${IMAGE_NAME} \
+    .

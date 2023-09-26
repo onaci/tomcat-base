@@ -1,0 +1,54 @@
+# Allow the THREDDS version to be selected at build time.
+ARG BASE_TAG="5.4"
+ARG BASE_IMAGE="unidata/thredds-docker:${BASE_TAG}"
+FROM ${BASE_IMAGE}
+
+#..............................................................................
+# Generic tomcat extension steps:
+#..............................................................................
+# Record the actual base image used from the FROM command in the build output.
+ARG BASE_IMAGE=$BASE_IMAGE
+LABEL org.opencontainers.image.base.name=${BASE_IMAGE}
+
+# Run updates for all OS packages in case the base image is old
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && \
+    apt-get dist-upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install the extension files into the Tomcat configuration directory
+ARG LOG4J_VERSION
+ENV LOG4J_VERSION=${LOG4J_VERSION:-2.20.0}
+COPY ./tomcat/* "${CATALINA_HOME}/conf/"
+RUN chmod 0755 "${CATALINA_HOME}/conf/"*.sh \
+    && "${CATALINA_HOME}/conf/install_extensions.sh"
+
+# Use the extension entrypoint script and command
+ENTRYPOINT ["/entrypoint_wrapper.sh"]
+CMD ["catalina.sh", "run"]
+
+#..............................................................................
+# THREDDS-specific extension steps
+#..............................................................................
+# Override the generic log4j configuration file with a THREDDS-specific one
+COPY ./thredds/log4j2.xml "${CATALINA_HOME}/conf/"
+
+# Override some environment variables with more THREDDS-specific versions
+ENV CONNECTOR_RELAXED_PATH_CHARS "[]|"
+ENV CONNECTOR_RELAXED_QUERY_CHARS "[]:|{}^&#x5c;&#x60;&quot;&lt;&gt;"
+
+# Prepare a volume mount-point for the THREDDS Cache directory
+ENV TDS_CACHE_PATH="${TDS_CONTENT_ROOT_PATH}/thredds/cache"
+RUN mkdir -p "${TDS_CACHE_PATH}" \
+    && chmod 0777 "${TDS_CACHE_PATH}"
+VOLUME "${TDS_CACHE_PATH}"
+
+# And another for the Java Utility Preferences directory
+ENV JAVA_PREFS_ROOT="${CATALINA_HOME}/javaUtilPrefs"
+RUN mkdir -p "${JAVA_PREFS_ROOT}" \
+    && chmod 0777 "${JAVA_PREFS_ROOT}"
+VOLUME "${JAVA_PREFS_ROOT}"
+
+# Cite the Unidata THREDDS DOI
+LABEL org.opencontainers.image.base.citation="https://doi.org/10.5065/D6N014KG"
