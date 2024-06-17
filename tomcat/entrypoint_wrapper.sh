@@ -23,7 +23,7 @@ cat < "${ACCESS_LOG_PATH}" &>> "${ACCESS_LOG_TARGET}" &
 if [ -r "$CATALINA_HOME/bin/javaopts.sh" ]; then
   . "$CATALINA_HOME/bin/javaopts.sh"
 else
-    export JAVA_OPTS="-server -Xms${TOMCAT_XMS_SIZE:-1G} -Xmx${TOMCAT_XMX_SIZE:-1G} -XX:+HeapDumpOnOutOfMemoryError -Djava.awt.headless=true"
+    export JAVA_OPTS="-server -Xms${TOMCAT_XMS_SIZE:-1G} -Xmx${TOMCAT_XMX_SIZE:-1G} -Djava.awt.headless=true"
 fi
 echo "JAVA_OPTS=\"${JAVA_OPTS}\""
 echo

@@ -68,7 +68,7 @@
 
     	 The connector.* settings interpolated here can be configured via
       	 CONNECTOR_* docker environment variables, which will be made available
-	 to tomcat (and this file) via the CATALINA_OPTS exports in setenv.sh
+	 to tomcat (and this file) via the CATALINA_OPTS exports in entrypoint_wrapper.sh
     -->
     <!--
       Unsecured HTTP Connector on port 8080
@@ -78,7 +78,7 @@
     -->
     <Connector compression="${CONNECTOR_COMPRESSION}"
           compressionMinSize="${CONNECTOR_COMPRESSION_MIN_SIZE}"
-          compressableMimeType="${CONNECTOR_COMPRESSIBLE_MIME_TYPE}"
+          compressibleMimeType="${CONNECTOR_COMPRESSIBLE_MIME_TYPE}"
     	     connectionTimeout="${CONNECTOR_CONNECTION_TIMEOUT}"
 	     maxThreads="${CONNECTOR_MAX_THREADS}"
 	     port="8080"

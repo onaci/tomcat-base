@@ -24,7 +24,7 @@ services:
   thredds-base:
     build:
       context: ./
-      dockerfile: Dockerfile.thredds
+      dockerfile: Dockerfile.thredds-base
       args:
         BASE_TAG: "${THREDDS_BASE_TAG}"
     container_name: thredds-base

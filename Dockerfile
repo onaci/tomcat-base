@@ -1,5 +1,5 @@
 # Allow the variant of our base-image to be selected at build time.
-ARG BASE_TAG="8.5-jdk11"
+ARG BASE_TAG="9.0-jdk11"
 ARG BASE_IMAGE="unidata/tomcat-docker:${BASE_TAG}"
 FROM ${BASE_IMAGE}
 
@@ -16,7 +16,7 @@ RUN apt-get update && \
 
 # Install the extension files into the Tomcat configuration directory
 ARG LOG4J_VERSION
-ENV LOG4J_VERSION=${LOG4J_VERSION:-2.20.0}
+ENV LOG4J_VERSION=${LOG4J_VERSION:-2.23.1}
 COPY ./tomcat/* "${CATALINA_HOME}/conf/"
 RUN chmod 0755 "${CATALINA_HOME}/conf/"*.sh \
     && "${CATALINA_HOME}/conf/install_extensions.sh"
