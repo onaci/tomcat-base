@@ -6,7 +6,7 @@ THIS_DIR=$( cd "$(dirname "${THIS_SCRIPT}")" && pwd)
 
 # Download and cache an up-to-date version of the Log4j binaries
 LOG4J_DIR="/usr/share/java/log4j"
-LOG4J_JARS="${LOG4J_JARS:-log4j-core log4j-api log4j-1.2-api log4j-jul log4j-slf4j-impl}"
+LOG4J_JARS="${LOG4J_JARS:-log4j-core log4j-api log4j-1.2-api log4j-jul}"
 LOG4J_VERSION="${LOG4J_VERSION:-2.23.1}"
 mkdir -p "${LOG4J_DIR}"
 wget -O "${LOG4J_DIR}/apache-log4j-${LOG4J_VERSION}-bin.zip" "http://archive.apache.org/dist/logging/log4j/${LOG4J_VERSION}/apache-log4j-${LOG4J_VERSION}-bin.zip"

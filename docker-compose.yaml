@@ -39,8 +39,8 @@ services:
     ports:
       - "${THREDDS_PROXY_PORT}:8080"
     volumes:
-      - thredds-base-cache:/usr/share/tomcat/content/cache
-      - thredds-base-prefs:/usr/share/tomcat/javaUtilPrefs
+      - thredds-base-cache:/usr/local/tomcat/content/cache
+      - thredds-base-prefs:/usr/local/tomcat/javaUtilPrefs
 
 volumes:
   thredds-base-cache:
